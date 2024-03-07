@@ -59,7 +59,7 @@ router.post('/addProduct',
         check('name', 'Please Add A Name').isString(),
         // check('isActive', 'Please Add Active Status').isBoolean(),
         check('remainingItems', 'Please Add Remaining Items').isNumeric(),
-        check('cost', 'Please Add Students').isNumeric()
+        check('cost', 'Please Add Cost').isNumeric()
     ],
 	async (req, res) => {
         if(!req.isAdminUser) {
