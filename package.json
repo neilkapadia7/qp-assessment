@@ -22,7 +22,7 @@
   "description": "Questions Pro Assessment for Grocery Booking API",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
   "author": "Neil Kapadia",
   "license": "ISC"
