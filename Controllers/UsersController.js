@@ -1,5 +1,5 @@
 const Groceries = require('@models/Groceries')
-const Carts = require('@models/Carts')
+const Carts = require('@models/Cart')
 const Orders = require('@models/Orders')
 const Users = require('@models/Users')
 

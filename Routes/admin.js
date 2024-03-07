@@ -53,9 +53,12 @@ router.post('/addProduct',
 	auth,
     [
         check('productId', 'Please Add A ProductId').isString(),
-        check('isActive', 'Please Add Active Status').isBoolean().require(),
-        check('remainingItems', 'Please Add Remaining Items').isNumeric().require(),
-        check('cost', 'Please Add Students').isNumeric().require(),
+        check('isActive', 'Please Add Active Status').isBoolean(),
+        check('remainingItems', 'Please Add Remaining Items').isNumeric(),
+        check('cost', 'Please Add Students').isNumeric(),
+        // check('isActive', 'Please Add Active Status').isBoolean().required(),
+        // check('remainingItems', 'Please Add Remaining Items').isNumeric().required(),
+        // check('cost', 'Please Add Students').isNumeric().required(),
     ],
 	async (req, res) => {
 
