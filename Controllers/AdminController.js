@@ -91,8 +91,6 @@ module.exports = {
 				},
 			};
 
-            let jwttoken = null;
-
 			jwt.sign(
 				payload,
 				process.env.JWTSecret,
@@ -101,15 +99,14 @@ module.exports = {
 				},
 				(err, token) => {
 					if (err) throw err;
-					jwttoken = token
+					return res.status(200).json({ 
+                        token,
+                        newUser
+                    });
 				}
 			);
 
-            return res.status(200).json({ 
-                token: jwttoken,
-                ...newUser,
-                password: null
-            });
+            
             
 			
 		} catch (err) {
