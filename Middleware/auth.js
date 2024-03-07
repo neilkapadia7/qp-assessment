@@ -10,10 +10,10 @@ module.exports = async function (req, res, next) {
 	try {
 		const decoded = jwt.verify(token, process.env.JWTSecret);
 
-		req.userId = decoded.user._id;
+		req.userId = decoded.user.id;
 		req.isAdminUser =false;
 
-		let checkUser = await Users.findById({_id: req.userId}, {isAdminUser});
+		let checkUser = await Users.findOne({_id: req.userId}, {isAdminUser: 1});
 		if(checkUser) {
 			if(checkUser.isAdminUser)
 				req.isAdminUser = checkUser.isAdminUser
@@ -23,6 +23,7 @@ module.exports = async function (req, res, next) {
 
 		next();
 	} catch (err) {
+		console.log("Error : ", err);
 		return res.status(401).json({ msg: 'Token is not Valid' });
 	}
 };
