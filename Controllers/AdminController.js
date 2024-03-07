@@ -1,5 +1,7 @@
 const Groceries = require('@models/Groceries');
 const Users = require('@models/Users');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 module.exports = {
     
@@ -83,12 +85,72 @@ module.exports = {
                 isAdminUser,
             }).save()
 
+            const payload = {
+				user: {
+					id: newUser._id,
+				},
+			};
+
+            let jwttoken = null;
+
+			jwt.sign(
+				payload,
+				process.env.JWTSecret,
+				{
+					expiresIn: 3600,
+				},
+				(err, token) => {
+					if (err) throw err;
+					jwttoken = token
+				}
+			);
+
             return res.status(200).json({ 
+                token: jwttoken,
                 ...newUser,
                 password: null
             });
             
 			
+		} catch (err) {
+			console.error(err.message);
+			res.status(500).json({ msg: 'Server Error' });
+		}
+    },
+
+    async loginUser(req, res) {
+        const { email, password } = req.body;
+
+		try {
+			let user = await Users.findOne({ email });
+
+			if (!user) {
+				return res.status(400).json({ msg: 'Invalid Email Id / User not found' });
+			}
+
+			const isMatch = await bcrypt.compare(password, user.password);
+
+			if (!isMatch) {
+				return res.status(400).json({ msg: 'Invalid Password' });
+			}
+
+			const payload = {
+				user: {
+					id: user.id,
+				},
+			};
+
+			jwt.sign(
+				payload,
+				process.env.JWTSecret,
+				{
+					expiresIn: 3600,
+				},
+				(err, token) => {
+					if (err) throw err;
+					res.json({ token });
+				}
+			);
 		} catch (err) {
 			console.error(err.message);
 			res.status(500).json({ msg: 'Server Error' });
