@@ -19,6 +19,10 @@ const OrdersSchema = mongoose.Schema({
     ],
     totalAmount: {
         type: Number
+    },
+    orderPlacedOn: {
+        type: Date,
+        default: Date.now()
     }
 }, 
 {
