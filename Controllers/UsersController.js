@@ -155,6 +155,19 @@ module.exports = {
                 totalAmount: cart.totalAmount
             }).save();
 
+            // Update Product Count
+            for (let product of placeOrder.products) {
+                let findprd = await Groceries.findById(product.productId);
+
+                if(findprd) {
+                    findprd.remainingItems -= product.quantity;
+                    findprd.itemsSold += product.quantity;
+
+                    await findprd.save();
+                }
+            }
+            
+
             return res.status(200).json({placeOrder, msg: "Success"});
         } catch (error) {
             console.error(error.message);
