@@ -50,6 +50,28 @@ router.post('/updateProduct',
 );
 
 
+// @route   POST    api/admin/createUser
+// @desc    CreateUser
+// @access  Public
+router.post('/createUser', 
+    [
+        check('name', 'Please Add A Name').isString(),
+        check('email', 'Please Add Remaining Items').isString(),
+        check('password', 'Please Add Students').isString(),
+        check('isAdminUser', 'Please Add Students').isBoolean(),
+    ],
+	async (req, res) => {
+        
+        const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.status(400).json({ error: errors.array() });
+		}
+
+        AdminController.createUser(req, res);
+    }
+);
+
+
 // @route   POST    api/admin/addProduct
 // @desc    Add Product
 // @access  Private

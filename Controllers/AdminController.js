@@ -61,4 +61,38 @@ module.exports = {
         }
     },
 
+    // Add new user
+    async createUser(req, res) {
+        const { name, email, password, isAdminUser } = req.body;
+
+		try {
+			let user = await Users.findOne({ email });
+
+			if (user) {
+				return res.status(400).json({ msg: 'User with email already exists' });
+			}
+
+            const salt = await bcrypt.genSalt(10);
+
+			let newPassword = await bcrypt.hash(password, salt);
+
+            let newUser = await new Users({
+                name,
+                email,
+                password: newPassword,
+                isAdminUser,
+            }).save()
+
+            return res.status(200).json({ 
+                ...newUser,
+                password: null
+            });
+            
+			
+		} catch (err) {
+			console.error(err.message);
+			res.status(500).json({ msg: 'Server Error' });
+		}
+    },
+
 };
