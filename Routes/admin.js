@@ -3,6 +3,7 @@ const { check, validationResult } = require('express-validator');
 
 const router = express.Router();
 const AdminController = require('@controllers/AdminController');
+const UserController = require('@controllers/UsersController');
 const auth = require('@middleware/auth');
 
 
@@ -11,7 +12,7 @@ const auth = require('@middleware/auth');
 // @access  Private
 router.get('/getAllProducts', 
 	auth,
-	async (req, res) => AdminController.getAllProducts(req, res)
+	async (req, res) => UserController.getAllProducts(req, res)
 );
 
 // @route   POST    api/admin/getProductById
@@ -19,7 +20,7 @@ router.get('/getAllProducts',
 // @access  Private
 router.get('/getProductById/:id', 
 	auth,
-	async (req, res) => AdminController.getProductById(req, res)
+	async (req, res) => UserController.getProductById(req, res)
 );
 
 
@@ -35,10 +36,13 @@ router.post('/updateProduct',
         check('cost', 'Please Add Cost').isNumeric().optional(),
     ],
 	async (req, res) => {
+        if(!req.isAdminUser) {
+            return res.status(400).json({ msg: "Invalid Access" });
+        }
 
         const errors = validationResult(req);
 		if (!errors.isEmpty()) {
-			return res.status(400).json({ errors: errors.array() });
+			return res.status(400).json({ error: errors.array() });
 		}
 
         AdminController.updateProduct(req, res);
@@ -52,19 +56,18 @@ router.post('/updateProduct',
 router.post('/addProduct', 
 	auth,
     [
-        check('productId', 'Please Add A ProductId').isString(),
-        check('isActive', 'Please Add Active Status').isBoolean(),
+        check('name', 'Please Add A Name').isString(),
+        // check('isActive', 'Please Add Active Status').isBoolean(),
         check('remainingItems', 'Please Add Remaining Items').isNumeric(),
-        check('cost', 'Please Add Students').isNumeric(),
-        // check('isActive', 'Please Add Active Status').isBoolean().required(),
-        // check('remainingItems', 'Please Add Remaining Items').isNumeric().required(),
-        // check('cost', 'Please Add Students').isNumeric().required(),
+        check('cost', 'Please Add Students').isNumeric()
     ],
 	async (req, res) => {
-
+        if(!req.isAdminUser) {
+            return res.status(400).json({ msg: "Invalid Access" });
+        }
         const errors = validationResult(req);
 		if (!errors.isEmpty()) {
-			return res.status(400).json({ errors: errors.array() });
+			return res.status(400).json({ error: errors.array() });
 		}
 
         AdminController.addProduct(req, res);

@@ -1,7 +1,7 @@
-const Groceries = require('@models/Groceries')
-const Carts = require('@models/Cart')
-const Orders = require('@models/Orders')
-const Users = require('@models/Users')
+const Groceries = require('@models/Groceries');
+const Carts = require('@models/Cart');
+const Orders = require('@models/Orders');
+const Users = require('@models/Users');
 
 
 module.exports = {
